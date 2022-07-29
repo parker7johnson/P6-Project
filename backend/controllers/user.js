@@ -3,13 +3,14 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 function signUp(req, res, next) {
-  
+  const salt = bcrypt.genSalt(10);
   bcrypt
-    .hash(req.body.password, 10)
+    .hash(req.body.password, salt)
     .then((hash) => {
       const user = new User({
         email: req.body.email,
         password: hash,
+        salt: salt
       });
       user
         .save()
